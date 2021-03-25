@@ -6,7 +6,18 @@ const shouldAnalyseBundle = process.env.ANALYSE_BUNDLE
 
 module.exports = {
   siteMetadata: {
-    siteTitleAlt: `Minimal Blog - Gatsby Theme`,
+    siteHeadline: `GAM-JA`,
+    siteDescription: `감자 개발 노트`,
+    siteUrl: `https://zzz6866.github.io`,
+    showLineNumbers: false,
+    siteTitle: `GAM-JA Dev Pad`,
+    siteTitleAlt: `GAM-JA Dev Pad`,
+    author: `juneyr`,
+    siteLanguage: `KR`,
+    siteImage: `/banner.png`,
+    tagsPath: `/tags`,
+    basePath: `/`,
+    blogPath: `/blog`,
   },
   plugins: [
     {
@@ -24,14 +35,14 @@ module.exports = {
           },
         ],
         externalLinks: [
-          {
-            name: `Twitter`,
-            url: `https://twitter.com/lekoarts_de`,
-          },
-          {
-            name: `Instagram`,
-            url: `https://www.instagram.com/lekoarts.de/`,
-          },
+          // {
+          //   name: `Twitter`,
+          //   url: `https://twitter.com/lekoarts_de`,
+          // },
+          // {
+          //   name: `Instagram`,
+          //   url: `https://www.instagram.com/lekoarts.de/`,
+          // },
         ],
       },
     },
