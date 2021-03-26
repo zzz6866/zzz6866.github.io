@@ -6,13 +6,13 @@ const shouldAnalyseBundle = process.env.ANALYSE_BUNDLE
 
 module.exports = {
   siteMetadata: {
-    siteHeadline: `GAM-JA`,
-    siteDescription: `감자 개발 노트`,
+    siteHeadline: `감자박`,
+    siteDescription: `감자박 개발 노트`,
     siteUrl: `https://zzz6866.github.io`,
     showLineNumbers: false,
-    siteTitle: `GAM-JA Dev Pad`,
-    siteTitleAlt: `GAM-JA Dev Pad`,
-    author: `juneyr`,
+    siteTitle: `감자박 개발 노트`,
+    siteTitleAlt: `감자박 개발 노트`,
+    author: `감자박`,
     siteLanguage: `KR`,
     siteImage: `/banner.png`,
     tagsPath: `/tags`,
@@ -28,6 +28,10 @@ module.exports = {
           {
             title: `Blog`,
             slug: `/blog`,
+          },
+          {
+            title: `Tags`,
+            slug: `/tags`,
           },
           {
             title: `About`,
