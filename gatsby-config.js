@@ -16,7 +16,7 @@ module.exports = {
     siteLanguage: `KR`,
     siteImage: `/banner.png`,
     tagsPath: `/tags`,
-    basePath: `/`,
+    basePath: `/blog`,
     blogPath: `/blog`,
   },
   plugins: [
@@ -24,6 +24,8 @@ module.exports = {
       resolve: `@lekoarts/gatsby-theme-minimal-blog`,
       // See the theme's README for all available options
       options: {
+        mdx: false, // Config .mdx .md below in gatsby-plugin-mdx (showCaptions 사용시 에러 발생으로 false 처리)
+        // feedTitle: 'Kaan Uzdoğan\'s Personal Site',
         navigation: [
           {
             title: `Blog`,
@@ -48,6 +50,26 @@ module.exports = {
           //   url: `https://www.instagram.com/lekoarts.de/`,
           // },
         ],
+        // formatString: 'DD MMMM YYYY'
+      },
+    },
+    {
+      resolve: `gatsby-plugin-mdx`,
+      options: {
+        extensions: [`.mdx`, `.md`],
+        gatsbyRemarkPlugins: [
+          {
+            resolve: `gatsby-remark-images`,
+            options: {
+              maxWidth: 960,
+              backgroundColor: 'transparent',
+              quality: 100,
+              // wrapperStyle: "max-height: 450px",
+              linkImagesToOriginal: true,
+              showCaptions: true,
+            },
+          },
+        ]
       },
     },
     {
