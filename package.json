@@ -14,7 +14,7 @@
     "start": "gatsby develop",
     "serve": "gatsby serve",
     "clean": "gatsby clean",
-    "deploy": "gatsby build && gh-pages -d public"
+    "deploy": "gatsby clean && gatsby build && gh-pages -d public"
   },
   "dependencies": {
     "@lekoarts/gatsby-theme-minimal-blog": "^2.7.3",
