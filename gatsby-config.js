@@ -50,7 +50,7 @@ module.exports = {
           //   url: `https://www.instagram.com/lekoarts.de/`,
           // },
         ],
-        // formatString: 'DD MMMM YYYY'
+        formatString: 'YYYY. MM. DD',
       },
     },
     {

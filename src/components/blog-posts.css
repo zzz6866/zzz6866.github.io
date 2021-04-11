@@ -5,7 +5,9 @@ figure {
 
 figure > span.gatsby-resp-image-wrapper {
     margin-bottom: 4px !important;
+    box-shadow: none !important;
 }
+
 .gatsby-resp-image-figcaption {
     font-size: 15px;
     text-align: center;
