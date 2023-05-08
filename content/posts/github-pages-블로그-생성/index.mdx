@@ -7,17 +7,17 @@ tags:
 ---
 
 > ## 1. Gatsby 템플릿 선택
->
 > - [**Link**](https://www.gatsbyjs.com/starters) 에서 원하는 테마를 선택
 > - gatsby-starter-minimal-blog를 선택하여 생성함
 > - 여러 형태의 테마가 많으나 react 기반의 테마를 선택함 (Gatsby, Jekyll, Hugo, Next.js 등 많음)
 > -   Fork를 클릭하여 로그인한 아이디로 Repository 복사
 > ![Fork를 클릭하여 저장소를 로그인한 ID으로 가져옴](image1.png)
 
+
 > ## 2. Github 환경설정
-> ![로그인된 계정에 복사된 Gatsby 테마 환경설정](image2.png)
 > - \{ID}.github.io 형식으로 입력
 > - Repository name을 blog로 입력할경우 \{ID}.github.io/blog 로 접속이 됨
+> ![로그인된 계정에 복사된 Gatsby 테마 환경설정](image2.png)
 
 
 > ## 3. WebStorm 에디터 환경설정
@@ -34,16 +34,15 @@ tags:
 > ![스크립트 설명](image6.png)
 > - develop : 로컬에 블로그는 띄우는 가장 많이 쓰이는 명령어, 배포하기 전에 로컬에서 글을 확인하는 용도
 > - clean : 캐쉬 및 빌드된 소스를 정리
-> - > - deploy : 테마에 기본으로는 없는 스크립트, 빌드된 소스를 Github Pages에 commit하는 용도로 사용
-> > ```json
-"dependencies": \{
-    ...
-    "gh-pages": "^3.1.0",
-    ...
-},
-> > ```
-> > - dependencies 항목에 위와 같이 추가하고 설치가 되어있어야 한다.
-
+> - deploy : 테마에 기본으로는 없는 스크립트, 빌드된 소스를 Github Pages에 commit하는 용도로 사용
+>    ```
+>    "dependencies": {
+>        ...
+>        "gh-pages": "^3.1.0",
+>        ...
+>    },
+>        ```
+> - dependencies 항목에 위와 같이 추가하고 설치가 되어있어야 한다.
 >
 > ![로컬에서 작업하기 위한 develp 실행](image7.png)
 > - Debug로 실행한건 습관.... Run으로 해도 상관 없음
@@ -54,7 +53,8 @@ tags:
 > - port를 변경하고 싶다면 develop 스크립트를 gatsby develop -p 8001 로 변경하면 가능
 > - 블로그 글 작성은 content/posts 의 예제로 확인(Markdown으로 작성됨)
 
-> ## 4. Github Pages 배포
+
+> ## 4. GitHub Pages 배포
 > - package.json 의 deploy 스크립트를 실행
 > - 실행하게 되면 public 폴더에 commit할 소스를 빌드한 후 gh-pages 브랜치에 commit 함
 > ![gh-pages에 commit 됨](image10.png)
