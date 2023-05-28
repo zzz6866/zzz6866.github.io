@@ -1,0 +1,52 @@
+---
+title: "Kubernetes Ingress Nginx 무한 Progressing 문제 해결"
+date: 2023-05-28
+slug: "/Kubernetes-Ingress-Nginx-Progressing-Problem-Solution"
+tags:
+- Kubernetes
+- Ingress
+- Nginx
+- Progressing Problem
+-
+---
+
+## 문제 발생 상황
+- ArgoCD를 이용하여 [Ingress-Nginx](https://kubernetes.github.io/ingress-nginx)를 설치하였다.
+- 설치 후 Ingress-Nginx를 이용하는 Pod가 생성되면 Ingress가 무한 Progressing 상태에 빠졌다.
+- Progressing 상태에 빠진 Ingress는 정상적으로 동작하지 않는다.
+- Ingress-Nginx의 Pod를 삭제하고 다시 생성해도 동일한 현상이 발생하였다.
+
+## 문제 해결
+### 해결책 1(커스텀 설정으로 해결)
+- Ingress-Nginx의 Service Type을 NodePort로 변경하였다.
+- ArgoCD의 ConfigMap에 아래와 같이 설정하였다.
+```yaml
+# kubectl edit -n argocd cm argocd-cm
+data:
+  resource.customizations: |
+    networking.k8s.io/Ingress:
+        health.lua: |
+          hs = {}
+          hs.status = "Healthy"
+          return hs
+```
+
+### 해결책 2(추가 설치로 해결)
+> 테스트를 하였지만 정리를 늦게 하여 자세하게 작성하지 않는다. 추후..적자...
+- metallb or traefik 설치하고 Ingess-Nginx를 LoadBalancer Type으로 변경한다.
+- 라우팅 처리를 위한 ConfigMap을 생성한다. 여유가 되는 아이피 대역으로 지정한다.
+```yaml
+# ConfigMap 생성
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: metallb-system
+  name: name
+data:
+  config: |
+    address-pools:
+    - name: default
+      protocol: layer2
+      addresses:
+      - 192.168.0.200-192.168.0.250
+```
