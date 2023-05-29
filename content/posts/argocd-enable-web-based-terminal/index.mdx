@@ -1,0 +1,32 @@
+---
+title: "GitHub Action Controller Runner 설치 및 사용"
+date: 2023-05-29
+slug: "/argocd-enable-web-based-terminal"
+tags:
+- ArgoCD
+- GitOps
+- Kubernetes
+- DevOps
+- CICD
+- web-based-terminal
+- terminal
+- argocd-terminal
+- argocd-web-terminal
+
+---
+
+## Description
+![ArgoCD Web-based Terminal](./image1.png)
+- ArgoCD Web-based Terminal 활성화 후 사용 방법을 정리한다.
+- ArgoCD Web-based Terminal은 ArgoCD UI에서 제공하는 터미널 기능이다.
+- ArgoCD를 통해 Pod에 접속하여 명령어를 실행할 수 있다.
+
+## ArgoCD Web-based Terminal 활성화 방법
+- ConfigMaps을 수정하여 활성화한다.
+![Update ArgoCD ConfigMap](./image2.png)
+- exec.enabled 값을 true로 변경하면 Pod Detail 화면에서 Terminal 버튼이 활성화된다.
+![Terminal 권한 활성화](./image3.png)
+
+## 참고
+- [Argocd Web-based Terminal](https://argo-cd.readthedocs.io/en/stable/operator-manual/web_based_terminal/)
+
