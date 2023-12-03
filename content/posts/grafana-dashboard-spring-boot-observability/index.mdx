@@ -1,0 +1,124 @@
+---
+title: "Grafana + Spring boot 모니터링"
+date: 2023-12-03
+slug: "/grafana-dashboard-spring-boot-observability"
+tags:
+- devops
+- SRE
+- grafana
+- spring-boot
+- monitoring
+- observability
+---
+
+# 요약
+이 GitHub 리포지토리 [blueswen/spring-boot-observability](https://github.com/blueswen/spring-boot-observability)는 Spring Boot 기반의 애플리케이션에서 보다 효과적인 모니터링과 사후 분석을 가능하게 하는 다양한 도구와 방법에 대해 소개
+
+이 프로젝트는 여러 관찰 가능성 도구를 예시로 들면서, 이들이 어떻게 효과적인 퍼포먼스 모니터링과 애플리케이션 상태 관리에 도움이 될 수 있는지를 상세히 설명
+
+기능별로 살펴보면:
+
+1. **Prometheus:** 애플리케이션의 메트릭스 데이터를 수집하고, 이를 통합 저장소에 보관하는 오픈소스 모니터링 시스템입니다. 정기적으로 서비스를 폴링하여 메트릭스를 수집하고, 이를 분석해 문제가 발생한 경우 알람.
+
+2. **Grafana:** 수집된 메트릭스를 풍부한 그래픽과 차트 포맷으로 시각화해주는 대시보드 도구입니다. 이를 통해 사용자는 효과적으로 시스템과 애플리케이션의 퍼포먼스를 모니터링 가능.
+
+3. **Zipkin:** 애플리케이션이 분산되어 작동하는 환경에서의 성능 이슈를 파악하기 위한 분산 추적 시스템입니다. 각 서비스 호출의 지연 시간을 추적하여, 성능 저하 원인을 찾아내는데 도움을 줌.
+
+4. **Spring Boot Actuator:** 애플리케이션의 여러 관리 기능을 제공하는 라이브러리입니다. 애플리케이션의 상태 확인, 메트릭스 수집, HTTP 트레이스 등의 기능을 제공하여, 실시간 모니터링 및 트러블슈팅에 도움 줌.
+
+5. **Sleuth:** 로깅 시스템과 연계하여 부가적인 메타데이터(예: 트레이스 ID)를 제공하며, 이를 통해 개발자는 분산 환경에서의 로그 추적을 더욱 용이하게 할 수 있음.
+
+이와 같이, 이 프로젝트는 Spring Boot 애플리케이션이 아키텍처에서 중요한 역할을 하고 있는 현대의 서버 사이드 모델에서 보다 나은 퍼포먼스 모니터링과 문제 해결을 위한 방법을 제시.
+
+# 필요 기능 추가
+### Before
+- [blueswen/spring-boot-observability](https://github.com/blueswen/spring-boot-observability)의 기준으로 Grafana와 연결하여 모니터링이 잘 되나, 특정 SAPN에서 필터 기능이 필요하여 개선.
+
+### After
+- [필터 기능 추가 버전](https://github.com/zzz6866/spring-boot-observability)
+- 특정 SAPN에 대해서 필터하여 데이터를 Drop하거나 수집하지 않게 하려고 함
+
+#### 시도1. API, SDK 등 코드를 활용한 기능 추가
+- [opentelemetry-java](https://github.com/open-telemetry/opentelemetry-java)
+- Spring Boot 프로젝트 안에 의존성을 추가하여 코드를 만드려고 하였으나, 성능 저하 발생 가능성과 코드 관리등의 이유로 제외
+- 기본적으로 API, SDK는 수동 관리에 최적화이고, 트레이싱이 필요한 부분에 코드를 작성하여 사용하는 트레이싱 방법 중 하나
+
+#### 시도2. Tempo를 활용한 필터
+- Tempo에 수집 되기전 필터하여 데이터를 버리려고 하였으나, 저장소의 기능이 강하고 문서를 보았으나 비슷한 기능을 찾지 못함.
+
+### 시도 3. OpenTelemetry Collector 활용한 필터
+#### 비교
+  - Tempo와 OpenTelemetry Collector는 모두 관측 가능성 필드에서 분산 시스템을 추적하기 위한 도구.
+  - **관측 가능성 데이터 처리:**
+    OpenTelemetry Collector는 텔레메트리 데이터를 취득, 처리 및 내보내는 프레임워크입니다. 트레이스, 메트릭, 로그를 처리하고 내보낼 수 있습니다. 이는 당신의 애플리케이션에서 포괄적인 관측 가능성 데이터를 제공하기 위해 추구하는 통합된 OpenTelemetry 표준.
+    Tempo는 Grafana가 만든 고규모, 최소 종속성 분산 추적 백엔드입니다. 이는 주로 트레이스 데이터에 중점.
+
+  - **데이터 저장:**
+    OpenTelemetry Collector 자체는 장기 저장을 처리하지 않음. 이는 데이터를 Jaeger, Zipkin 같은 다른 관측 가능성 플랫폼이나 AWS X-Ray, Google Cloud Trace 등의 클라우드 제공자에게 직접 전송.
+    반면에 Tempo는 수집된 트레이스 데이터의 저장을 관리.
+
+  - **사용 편의성:**
+    두 도구 모두 일정한 학습 곡선을 가지고 있음. 그러나 이미 Grafana의 다른 관측 가능성 도구들, 예를 들어 로그를 위한 Loki와 메트릭을 위한 Prometheus를 사용하고 있다면, 트레이스를 위해 Tempo를 추가하는 것이 전체 설정을 간소화 가능.
+
+  - **다른 시스템과의 통합:**
+    OpenTelemetry Collector는 더욱 중립적이며 명확하며 여러 가지 프로세서, 수신기, 수출기를 가지고 있어서 이는 이질적인 환경에 적합.
+    당신의 특정 요구 사항에 따라 어느 도구가 당신의 필요에 가장 잘 부합하는지 결정하시면 됩니다. 완전한 기능을 갖춘 텔레메트리 수집, 처리 및 내보내기 시스템이 필요하다면, OpenTelemetry Collector가 더 좋을 수 있습니다. 그러나 다른 Grafana 도구와 잘 어울리는 간결하고 단순한 추적 백엔드가 필요하다면, 당신은 Tempo를 선호 됨.
+
+#### 차이점
+- **데이터 처리 및 관리**
+  OpenTelemetry Collector는 텔레메트리 데이터(추적, 메트릭, 로그)를 처리하고 내보낼 수 있는 범용적인 도구입니다.
+  반면에, Tempo는 분산 추적 시스템에 집중된 도구로서 주로 추적 데이터를 처리하고 저장합니다.
+- **데이터 저장:**
+  OpenTelemetry Collector는 다양한 관측 도구나 클라우드 서비스에 데이터를 내보내는 역할을 합니다. 따라서 자체적인 장기 저장 기능은 없습니다.
+  반면에, Tempo는 추적 데이터의 저장을 직접 관리하며, 이는 Tempo가 다른 Grafana 제품군과 함께 사용될 때 장점이 될 수 있습니다.
+- **시스템과의 통합:**
+  OpenTelemetry Collector는 다양한 프로세서, 수신기, 수출기를 지원하므로 다양한 환경과의 통합이 용이합니다.
+  반면에, Tempo는 기본적으로 그라파나 시스템 내에서의 사용이 가정되어 있습니다.
+  따라서, 전반적인 텔레메트리 데이터 처리와 다양한 시스템과의 통합이 필요하다면 OpenTelemetry Collector를 선택할 수 있습니다. 반면, 단순하고 높은 규모의 추적 데이터를 처리하고 저장하는 데 중점을 두고 있다면 Tempo가 적합할 수 있습니다.
+
+### 정리
+- OpenTelemetry Collector를 파이프라인 중간에 두어 필요 없는 데이터에 대해서 Tempo로 보내지 않도록 처리
+- OpenTelemetry Collertor 실행시 아래 yaml 코드를 추가 [참고](https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/processor/tailsamplingprocessor/README.md)
+    ```yaml
+
+    processors:
+      batch:
+      tail_sampling:
+        policies: [
+          {
+            name: and-policy-1,
+            type: and,
+            and: {
+              and_sub_policy:
+                [
+                  # {
+                  # name: test-and-policy-1,
+                  # type: numeric_attribute,
+                  # numeric_attribute: { key: key1, min_value: 50, max_value: 100 }
+                  # },
+                  {
+                    name: test-and-policy-2,
+                    type: string_attribute,
+                    string_attribute: {
+                      key: http.route,
+                      values: [ "/actuator/prometheus" ],
+                      enabled_regex_matching: true,
+                      invert_match: true
+                    }
+                  },
+                  {
+                    name: test-and-policy-3,
+                    type: string_attribute,
+                    string_attribute: {
+                      key: service.name,
+                      values: [ "app-b" ],
+                      enabled_regex_matching: false,
+                      invert_match: true
+                    }
+                  },
+    #              { name: always, type: always_sample },
+                ]
+            }
+          }
+        ]
+    ```
